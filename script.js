@@ -13,6 +13,9 @@ let currentUser = JSON.parse(localStorage.getItem('hype_user')) || null;
 let activeCategory = "ALL";
 let isRegistering = false;
 
+// INICJALIZACJA STRIPE
+const stripe = Stripe('pk_live_51SzNdwRuhbbq1Rr5LsOBgIbYdBhyqzsJoP0vbOWuz5uWEr72Cs8y1sOpXpe50POf2RDh44JY6JLkEvQOfLJYmwh200Kw9mSmXX');
+
 document.addEventListener('DOMContentLoaded', () => {
     applyAdvancedFilters();
     updateUI();
@@ -28,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// FILTROWANIE I WYŚWIETLANIE
 function applyAdvancedFilters() {
     const query = document.getElementById('filter-search').value.toLowerCase();
     const minP = parseFloat(document.getElementById('price-min').value) || 0;
@@ -58,6 +62,7 @@ function applyAdvancedFilters() {
     document.getElementById('cat-title').innerText = activeCategory === "ALL" ? "Wszystkie produkty" : activeCategory;
 }
 
+// SZCZEGÓŁY PRODUKTU
 function showDetails(id) {
     const p = PRODUCTS.find(x => x.id === id);
     const content = document.getElementById('desc-content');
@@ -85,6 +90,7 @@ function clearFilters() {
     applyAdvancedFilters();
 }
 
+// LOGIKA KOSZYKA
 function toggleCart() {
     document.getElementById('cart-sidebar').classList.toggle('active');
     renderCart();
@@ -120,22 +126,7 @@ function removeCart(i) {
     updateUI(); renderCart();
 }
 
-function toggleCheckoutModal() {
-    const m = document.getElementById('checkout-modal');
-    m.style.display = (m.style.display === 'block') ? 'none' : 'block';
-}
-
-function initiateCheckout() {
-    if (cart.length === 0) return alert("Koszyk jest pusty!");
-    if (!currentUser) return alert("Zaloguj się, aby złożyć zamówienie!");
-    toggleCart(); // Zamknij koszyk
-    toggleCheckoutModal(); // Otwórz formularz
-}
-
-// 1. INICJALIZACJA STRIPE (Wstaw swój klucz pk_...)
-const stripe = Stripe('pk_live_51SzNdwRuhbbq1Rr5LsOBgIbYdBhyqzsJoP0vbOWuz5uWEr72Cs8y1sOpXpe50POf2RDh44JY6JLkEvQOfLJYmwh200Kw9mSmXX');
-
-// 2. FUNKCJE MODALI
+// FINALIZACJA I MODALE
 function toggleCheckoutModal() {
     const m = document.getElementById('checkout-modal');
     if (m) {
@@ -143,14 +134,11 @@ function toggleCheckoutModal() {
     }
 }
 
-// 3. OBSŁUGA FINALIZACJI (Przycisk w koszyku)
 function initiateCheckout() {
-    // Sprawdzanie czy koszyk nie jest pusty (zakładając, że masz zmienną cart)
-    if (typeof cart === 'undefined' || cart.length === 0) {
-        return alert("Koszyk jest pusty!");
-    }
-
-    // Przygotowanie danych do formularza (ukryte pola dla Formspree)
+    if (cart.length === 0) return alert("Koszyk jest pusty!");
+    if (!currentUser) return alert("Zaloguj się, aby złożyć zamówienie!");
+    
+    // Przygotowanie danych do ukrytych pól formularza
     const productList = cart.map(item => `${item.name} (${item.price} PLN)`).join(", ");
     const totalAmount = document.getElementById('total-price').innerText;
 
@@ -160,21 +148,20 @@ function initiateCheckout() {
     if (dataInput) dataInput.value = productList;
     if (totalInput) totalInput.value = totalAmount;
 
-    // Zamknij koszyk i otwórz formularz adresu
-    if (typeof toggleCart === 'function') toggleCart(); 
-    toggleCheckoutModal();
+    toggleCart(); // Zamknij koszyk
+    toggleCheckoutModal(); // Otwórz formularz
 }
 
+// OBSŁUGA ZAMÓWIENIA (FORMSPREE + STRIPE)
 async function handleOrder(event) {
     event.preventDefault();
 
     const form = event.target;
     const formData = new FormData(form);
-    
-    // Pobieramy wybraną metodę płatności z selecta
     const paymentMethod = form.querySelector('select[name="Metoda_Platnosci"]').value;
+    const total = document.getElementById('total-price').innerText;
 
-    // 1. WYSYŁKA DANYCH DO FORMSPREE (żebyś wiedział kto i co zamówił)
+    // 1. WYSYŁKA DANYCH DO FORMSPREE
     try {
         await fetch(form.action, {
             method: form.method,
@@ -185,23 +172,19 @@ async function handleOrder(event) {
         console.error("Błąd wysyłki danych:", error);
     }
 
-    // 2. PRZEKIEROWANIE DO PŁATNOŚCI (Twoja nowa część)
+    // 2. LOGIKA PŁATNOŚCI
     if (paymentMethod === 'BLIK' || paymentMethod === 'Przelew') {
-        // Pobieramy aktualną sumę z koszyka na stronie
-        const total = document.getElementById('total-price').innerText;
-        
-        // Wyświetlamy klientowi instrukcję
-        alert(`Zostaniesz przekierowany do płatności. Wpisz kwotę: ${total} w polu ceny na następnej stronie.`);
-        
-        // Przekierowanie do Twojego linku ze Stripe
+        alert(`Zostaniesz przekierowany do płatności. PROSIMY WPISAĆ KWOTĘ: ${total} w polu ceny.`);
         window.location.href = "https://buy.stripe.com/5kQfZjcsH3QY6gZ3WbeAg00";
     } else {
-        // Obsługa pobrania
         alert("Zamówienie za pobraniem przyjęte! Wyślemy paczkę niebawem.");
+        cart = [];
+        localStorage.setItem('hype_cart', JSON.stringify(cart));
         location.reload(); 
     }
 }
 
+// AUTORYZACJA
 function updateUI() {
     document.getElementById('cart-count').innerText = cart.length;
     if(currentUser) document.getElementById('welcome-msg').innerText = "Cześć, " + currentUser.email.split('@')[0];
@@ -234,7 +217,6 @@ function submitAuth() {
     }
 }
 
-// Zamykanie modali po kliknięciu tła
 window.onclick = function(e) {
     if (e.target.className === 'modal') {
         e.target.style.display = 'none';
