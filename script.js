@@ -5,7 +5,7 @@ const PRODUCTS = [
     { id: 4, name: "POKEMON VMAX CLIMAX BOOSTER BOX", price: 420.00, cat: "POKEMON", img: "zdjecia/pokemony.png", desc: "Japoński hit High Class Pack. Każda paczka zawiera kartę V, VMAX, VSTAR lub Trainer Gallery." },
     { id: 5, name: "2025 TOPPS CHROME FORMULA", price: 1590.00, cat: "F1", img: "zdjecia/F1.png", desc: "Najwyższa jakość kart F1. Box zawiera 18 paczek. Szukaj kart 'Checkered Flag' i autografów kierowców." },
     { id: 6, name: "MATCH ATTAX 2026 MEGA TIN", price: 59.99, cat: "PILKA", img: "zdjecia/ATTAX.png", desc: "Mega puszka Match Attax. 66 kart w środku, w tym 4 ekskluzywne karty Limited Edition." },
-    { id: 7, name: "2025 TOPPS CHROME SPONGEBOB 25TH ANNIVERSARY", price: 1999.99, cat: "SPONGEBOB", img: "zdjecia/spongebob1.png", desc: "Limitowany produkt kolekcjonersy. Tylko 500 sztuk na świecie. Zawiera ekskluzywne karty seryjne." }
+    { id: 7, name: "2025 TOPPS CHROME SPONGEBOB 25TH ANNIVERSARY", price: 1999.99, cat: "SPONGEBOB", img: "zdjecia/spongebob1.png", desc: "Limitowany produkt kolekcjonersy. Ilość limitowana oraz bardzo mała. Zawiera ekskluzywne karty seryjne." }
 ];
 
 let cart = JSON.parse(localStorage.getItem('hype_cart')) || [];
@@ -222,4 +222,5 @@ window.onclick = function(e) {
         e.target.style.display = 'none';
     }
 }
+
 
