@@ -1,5 +1,5 @@
 const PRODUCTS = [
-    { id: 1, name: "2025 TOPPS CHROME SPONGEBOB HOBBY", price: 199.99, cat: "SPONGEBOB", img: "zdjecia/spongebob.png", desc: "Oficjalna kolekcja na 25-lecie! W środku znajdziesz 24 paczki, szansa na unikalne Chrome Autographs." },
+    { id: 1, name: "2025 TOPPS CHROME SPONGEBOB HOBBY", price: 199.99, cat: "SPONGEBOB", img: "zdjecia/spongebob.png", desc: "Oficjalna kolekcja na 25-lecie! W środku znajdziesz 5 kart, szansa na unikalne Chrome Autographs." },
     { id: 2, name: "NARUTO NINDO CASE 2025 EDITION", price: 899.00, cat: "ALL", img: "zdjecia/naruto.png", desc: "Cały case (12 boxów) serii Nindo. Gwarantowane karty typu Rare oraz szansa na Gold Etched Naruto." },
     { id: 3, name: "NBA PANINI PRIZM 2025-26 BLASTER", price: 349.50, cat: "NBA", img: "zdjecia/nba.png", desc: "Kultowa seria Prizm. 6 paczek w środku, 4 karty na paczkę. Szukaj Silver Prizms!" },
     { id: 4, name: "POKEMON VMAX CLIMAX BOOSTER BOX", price: 420.00, cat: "POKEMON", img: "zdjecia/pokemony.png", desc: "Japoński hit High Class Pack. Każda paczka zawiera kartę V, VMAX, VSTAR lub Trainer Gallery." },
@@ -222,3 +222,4 @@ window.onclick = function(e) {
         e.target.style.display = 'none';
     }
 }
+
