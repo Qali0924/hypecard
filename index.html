@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="zdjecia/logo.png">
+    <script src="https://js.stripe.com/v3/"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HypeCards.pl | Sklep TCG</title>
     <link rel="stylesheet" href="style.css">
@@ -102,6 +103,33 @@
             </div>
         </div>
     </div>
+    <div id="checkout-modal" class="modal">
+    <div class="modal-card" style="width: 500px;">
+        <span class="close-modal" onclick="toggleCheckoutModal()">&times;</span>
+        <h2>Finalizacja zamówienia</h2>
+        <form action="https://formspree.io/f/mqedepqb" method="POST"></form>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="text" id="order-name" placeholder="Imię" required>
+                <input type="text" id="order-surname" placeholder="Nazwisko" required>
+            </div>
+            <input type="email" id="order-email" placeholder="E-mail" required>
+            <input type="text" id="order-address" placeholder="Ulica i numer" required>
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px;">
+                <input type="text" id="order-zip" placeholder="Kod pocztowy" required>
+                <input type="text" id="order-city" placeholder="Miasto" required>
+            </div>
+            
+            <label style="font-size: 11px; font-weight: 700; margin-top: 10px; display: block;">METODA PŁATNOŚCI:</label>
+            <select id="payment-method" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid #000;">
+                <option value="blik">BLIK (Kod w następnym kroku)</option>
+                <option value="przelew">Przelew tradycyjny</option>
+                <option value="pobranie">Płatność przy odbiorze</option>
+            </select>
+
+            <button type="submit" class="checkout-btn" style="background: #000;">POTWIERDZAM I PŁACĘ</button>
+        </form>
+    </div>
+</div>
 
     <div id="desc-modal" class="modal">
         <div class="modal-card" style="max-width: 500px;">
