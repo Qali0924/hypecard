@@ -120,9 +120,86 @@ function removeCart(i) {
     updateUI(); renderCart();
 }
 
+function toggleCheckoutModal() {
+    const m = document.getElementById('checkout-modal');
+    m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+}
+
 function initiateCheckout() {
-    if(cart.length === 0) return alert("Koszyk jest pusty!");
-    alert("Przekierowanie do płatności...");
+    if (cart.length === 0) return alert("Koszyk jest pusty!");
+    if (!currentUser) return alert("Zaloguj się, aby złożyć zamówienie!");
+    toggleCart(); // Zamknij koszyk
+    toggleCheckoutModal(); // Otwórz formularz
+}
+
+// 1. INICJALIZACJA STRIPE (Wstaw swój klucz pk_...)
+const stripe = Stripe('pk_live_51SzNdwRuhbbq1Rr5LsOBgIbYdBhyqzsJoP0vbOWuz5uWEr72Cs8y1sOpXpe50POf2RDh44JY6JLkEvQOfLJYmwh200Kw9mSmXX');
+
+// 2. FUNKCJE MODALI
+function toggleCheckoutModal() {
+    const m = document.getElementById('checkout-modal');
+    if (m) {
+        m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+    }
+}
+
+// 3. OBSŁUGA FINALIZACJI (Przycisk w koszyku)
+function initiateCheckout() {
+    // Sprawdzanie czy koszyk nie jest pusty (zakładając, że masz zmienną cart)
+    if (typeof cart === 'undefined' || cart.length === 0) {
+        return alert("Koszyk jest pusty!");
+    }
+
+    // Przygotowanie danych do formularza (ukryte pola dla Formspree)
+    const productList = cart.map(item => `${item.name} (${item.price} PLN)`).join(", ");
+    const totalAmount = document.getElementById('total-price').innerText;
+
+    const dataInput = document.getElementById('cart-data-input');
+    const totalInput = document.getElementById('cart-total-input');
+
+    if (dataInput) dataInput.value = productList;
+    if (totalInput) totalInput.value = totalAmount;
+
+    // Zamknij koszyk i otwórz formularz adresu
+    if (typeof toggleCart === 'function') toggleCart(); 
+    toggleCheckoutModal();
+}
+
+async function handleOrder(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const formData = new FormData(form);
+    
+    // Pobieramy wybraną metodę płatności z selecta
+    const paymentMethod = form.querySelector('select[name="Metoda_Platnosci"]').value;
+
+    // 1. WYSYŁKA DANYCH DO FORMSPREE (żebyś wiedział kto i co zamówił)
+    try {
+        await fetch(form.action, {
+            method: form.method,
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+        });
+    } catch (error) {
+        console.error("Błąd wysyłki danych:", error);
+    }
+
+    // 2. PRZEKIEROWANIE DO PŁATNOŚCI (Twoja nowa część)
+    if (paymentMethod === 'BLIK' || paymentMethod === 'Przelew') {
+        // Pobieramy aktualną sumę z koszyka na stronie
+        const total = document.getElementById('total-price').innerText;
+        
+        // Wyświetlamy klientowi instrukcję
+        alert(`Zostaniesz przekierowany do płatności. Wpisz kwotę: ${total} w polu ceny na następnej stronie.`);
+        
+        // Przekierowanie do Twojego linku ze Stripe
+        window.location.href = "https://buy.stripe.com/5kQfZjcsH3QY6gZ3WbeAg00";
+    } else {
+        // Obsługa pobrania
+        alert("Zamówienie za pobraniem przyjęte! Wyślemy paczkę niebawem.");
+        location.reload(); 
+    }
 }
 
 function updateUI() {
