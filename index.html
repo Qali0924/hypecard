@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="zdjecia/logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HypeCards.pl | Sklep TCG</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+<div class="header-top">
+    <div class="logo-img-container" onclick="window.location.reload()">
+        <img src="zdjecia/logo.png" alt="HypeCards Logo" class="main-logo">
+    </div>
+
+    <div class="logo-text" onclick="window.location.reload()">
+        HYPE<span>CARDS.PL</span>
+    </div>
+
+    <div class="user-controls">
+        <span id="welcome-msg"></span>
+        <button class="icon-btn" onclick="toggleAuthModal()"><i class="fa-regular fa-user"></i></button>
+        <div class="cart-trigger" onclick="toggleCart()">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span id="cart-count">0</span>
+        </div>
+    </div>
+</div>
+        <nav>
+            <ul id="cat-nav">
+                <li><a href="#" class="nav-link active" data-cat="ALL">LIVE BREAK</a></li>
+                <li><a href="#" class="nav-link" data-cat="POKEMON">POKEMON</a></li>
+                <li><a href="#" class="nav-link" data-cat="NBA">NBA</a></li>
+                <li><a href="#" class="nav-link" data-cat="F1">F1</a></li>
+                <li><a href="#" class="nav-link" data-cat="PILKA">PIŁKA NOŻNA</a></li>
+                <li><a href="#" class="nav-link" data-cat="SPONGEBOB">SPONGEBOB</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="advanced-filters">
+            <div class="filter-group main-search">
+                <label>Nazwa produktu:</label>
+                <input type="text" id="filter-search" placeholder="Czego szukasz?" onkeyup="applyAdvancedFilters()">
+            </div>
+            <div class="filter-group">
+                <label>Cena od:</label>
+                <input type="number" id="price-min" placeholder="0" oninput="applyAdvancedFilters()">
+            </div>
+            <div class="filter-group">
+                <label>Cena do:</label>
+                <input type="number" id="price-max" placeholder="9999" oninput="applyAdvancedFilters()">
+            </div>
+            <div class="filter-group">
+                <label>Sortuj:</label>
+                <select id="sort-select" onchange="applyAdvancedFilters()">
+                    <option value="default">Polecane</option>
+                    <option value="low">Cena: rosnąco</option>
+                    <option value="high">Cena: malejąco</option>
+                </select>
+            </div>
+            <button class="btn-reset" onclick="clearFilters()">Wyczyść</button>
+        </div>
+
+        <h2 id="cat-title">Wszystkie produkty</h2>
+        <div class="product-grid" id="product-container"></div>
+    </main>
+
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-inner">
+            <div class="cart-top">
+                <h3>KOSZYK</h3>
+                <span class="close-x" onclick="toggleCart()">&times;</span>
+            </div>
+            <div id="cart-content" class="cart-content"></div>
+            <div class="cart-bottom">
+                <div class="total-box">
+                    <span>SUMA:</span>
+                    <span id="total-price">0.00 PLN</span>
+                </div>
+                <button class="checkout-btn" onclick="initiateCheckout()">ZAPŁAĆ TERAZ</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="auth-modal" class="modal">
+        <div class="modal-card">
+            <span class="close-modal" onclick="toggleAuthModal()">&times;</span>
+            <div id="auth-ui">
+                <h2 id="auth-header">Logowanie</h2>
+                <input type="email" id="email" placeholder="E-mail">
+                <input type="password" id="password" placeholder="Hasło">
+                <div id="reg-fields" style="display:none">
+                    <input type="password" id="password-confirm" placeholder="Powtórz hasło">
+                </div>
+                <button class="main-auth-btn" onclick="submitAuth()">KONTYNUUJ</button>
+                <p class="switch-mode" onclick="toggleRegMode()">Zmień tryb: Logowanie / Rejestracja</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="desc-modal" class="modal">
+        <div class="modal-card" style="max-width: 500px;">
+            <span class="close-modal" onclick="closeDescModal()">&times;</span>
+            <div id="desc-content"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
