@@ -200,4 +200,30 @@ footer {
 .promo-bar.show {
     top: 0;
 }
+.discount-box {
+    margin: 15px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.discount-box input {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.discount-box button {
+    padding: 10px;
+    background: #ff003c;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#discount-info {
+    font-size: 13px;
+    font-weight: bold;
+}
+
 
