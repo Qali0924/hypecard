@@ -231,6 +231,35 @@ window.addEventListener("load", () => {
 function closePromo() {
     document.getElementById("promo-bar").classList.remove("show");
 }
+let discountValue = 0;
+
+function applyDiscount() {
+    const code = document.getElementById("discount-code").value.trim().toUpperCase();
+    const info = document.getElementById("discount-info");
+
+    if (code === "WALENTYNKI") {
+        discountValue = 0.10;
+        info.textContent = "Kod aktywny! -10% 🎉";
+        info.style.color = "green";
+    } else {
+        discountValue = 0;
+        info.textContent = "Nieprawidłowy kod!";
+        info.style.color = "red";
+    }
+
+    updateCartTotal();
+}
+
+function updateCartTotal() {
+    let total = calculateCartTotal(); // MUSI istnieć Twoja funkcja licząca koszyk
+    
+    if (discountValue > 0) {
+        total = total - (total * discountValue);
+    }
+
+    document.getElementById("total-price").textContent = total.toFixed(2) + " PLN";
+}
+
 
 
 
