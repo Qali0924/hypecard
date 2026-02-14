@@ -222,5 +222,15 @@ window.onclick = function(e) {
         e.target.style.display = 'none';
     }
 }
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        document.getElementById("promo-bar").classList.add("show");
+    }, 500);
+});
+
+function closePromo() {
+    document.getElementById("promo-bar").classList.remove("show");
+}
+
 
 
